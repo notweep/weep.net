@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>weep.net</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, rgba(17, 24, 39, 0.7), rgba(69, 69, 70, 0.7)), url("https://64.media.tumblr.com/aa59ba98e0208c2c4a7980360e59f020/a3a26d671076b72b-9b/s540x810/cc0ac15733bf40b86ca656e5f39ffdf5ca94f877.gif") no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .profile-card {
+      background: rgba(31, 41, 55, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    .profile-card:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1rem auto;
+      border: 2px solid #1f1d20;
+      display: block;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background: rgba(75, 85, 99, 0.6);
+      border-radius: 0.5rem;
+      color: #e5e7eb;
+      text-decoration: none;
+      transition: background 0.3s;
+      width: 100%;
+    }
+
+    .social-link:hover {
+      background: rgba(75, 85, 99, 0.8);
+    }
+
+    .social-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .audio-control {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #3b3641;
+      color: #e5e7eb;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100%;
+    }
+
+    .audio-control:hover {
+      background: #544e58;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      transition: opacity 0.5s ease;
+    }
+
+    .overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .overlay button {
+      padding: 1rem 2rem;
+      background: #4c4950;
+      color: #e5e7eb;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .overlay button:hover {
+      background: #666368;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="audioOverlay">
+    <button onclick="startAudio()">click to open</button>
+  </div>
+  
+  <div class="profile-card">
+    <img src="https://th.bing.com/th/id/R.a9e4e351008eea2bdfa048bd6fc79d6d?rik=FrHIBV50U5qErw&riu=http%3a%2f%2f31.media.tumblr.com%2fe2292c25b27e0851bf878b4cce79af37%2ftumblr_mrj0f6AH9W1sorll2o1_500.gif&ehk=N3RJed2jJ68Cq8nPRTAzZL%2f%2bhZ2IHZ1HfCr0ycxgMGg%3d&risl=&pid=ImgRaw&r=0" alt="Profile Picture" class="profile-img">
+    <h1 class="text-2xl font-bold text-gray-100">not weep</h1>
+    <p class="text-gray-300 mb-4">:1</p>
+    <div class="social-links">
+      <a href="https://www.youtube.com/watch?v=x76fg-eG0vw" class="social-link">
+        <img src="https://1.bp.blogspot.com/-kR0cwNMsf2g/X9v_jO1Oj2I/AAAAAAAARo8/fijDADxYlUUftp8BH74i7akTy2r9T4WQQCLcBGAsYHQ/s0/Youtube%2BIcon%2B-%2BDownload%2BFree%2BVector%2BPNG.png" alt="YT " class="social-icon">
+        YT
+      </a>
+      <a href="https://discord.gg/RECvefHb" class="social-link">
+        <img src="https://img.icons8.com/ios-filled/24/ffffff/discord-logo.png" alt="Discord Icon" class="social-icon">
+        Discord
+      </a>
+    </div>
+    <button class="audio-control" onclick="toggleAudio()">Play Audio</button>
+  </div>
+
+  <audio id="backgroundAudio" loop>
+    <source src="https://ia804608.us.archive.org/15/items/uk-drill-mix-best-british-drill-songs-128-kbps/UK%20Drill%20Mix%20%F0%9F%94%A5%20Best%20British%20Drill%20Songs%20%28128%20kbps%29.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const audio = document.getElementById('backgroundAudio');
+    const audioButton = document.querySelector('.audio-control');
+    const overlay = document.getElementById('audioOverlay');
+    let isPlaying = false;
+
+    // weeps vol shit
+    audio.volume = 1.0;
+
+    function startAudio() {
+      audio.play().then(() => {
+        isPlaying = true;
+        audioButton.textContent = 'Pause Audio';
+        overlay.classList.add('hidden');
+      }).catch(e => {
+        console.log('Audio play failed:', e);
+        audioButton.textContent = 'Play Audio';
+      });
+    }
+
+    function toggleAudio() {
+      if (isPlaying) {
+        audio.pause();
+        audioButton.textContent = 'Play Audio';
+      } else {
+        audio.play().catch(e => console.log('Audio play failed:', e));
+        audioButton.textContent = 'Pause Audio';
+      }
+      isPlaying = !isPlaying;
+    }
+  </script>
+</body>
+</html>
